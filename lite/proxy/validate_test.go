@@ -17,7 +17,7 @@ var (
 	testTime2    = time.Date(2017, 1, 2, 1, 1, 1, 1, time.UTC)
 )
 
-var hdrHeight11 = &types.Header{
+var hdrHeight11 = types.Header{
 	Height:         11,
 	Time:           testTime1,
 	ValidatorsHash: []byte("Tendermint"),
@@ -33,21 +33,18 @@ func TestValidateBlock(t *testing.T) {
 			block: nil, wantErr: "non-nil Block",
 		},
 		{
-			block: &types.Block{}, wantErr: "nil Header",
-		},
-		{
-			block: &types.Block{Header: new(types.Header)}, wantErr: "unexpected empty SignedHeader",
+			block: &types.Block{}, wantErr: "unexpected empty SignedHeader",
 		},
 
 		// Start Header.Height mismatch test
 		{
-			block:        &types.Block{Header: &types.Header{Height: 10}},
+			block:        &types.Block{Header: types.Header{Height: 10}},
 			signedHeader: types.SignedHeader{Header: &types.Header{Height: 11}},
 			wantErr:      "Header heights mismatched",
 		},
 
 		{
-			block:        &types.Block{Header: &types.Header{Height: 11}},
+			block:        &types.Block{Header: types.Header{Height: 11}},
 			signedHeader: types.SignedHeader{Header: &types.Header{Height: 11}},
 		},
 		// End Header.Height mismatch test
@@ -61,15 +58,15 @@ func TestValidateBlock(t *testing.T) {
 
 		{
 			block:        &types.Block{Header: hdrHeight11},
-			signedHeader: types.SignedHeader{Header: hdrHeight11},
+			signedHeader: types.SignedHeader{Header: &hdrHeight11},
 		},
 		// End Header.Hash mismatch test
 
 		// Start Header.Data hash mismatch test
 		{
 			block: &types.Block{
-				Header: &types.Header{Height: 11},
-				Data:   &types.Data{Txs: []types.Tx{[]byte("0xDE"), []byte("AD")}},
+				Header: types.Header{Height: 11},
+				Data:   types.Data{Txs: []types.Tx{[]byte("0xDE"), []byte("AD")}},
 			},
 			signedHeader: types.SignedHeader{
 				Header: &types.Header{Height: 11},
@@ -79,8 +76,8 @@ func TestValidateBlock(t *testing.T) {
 		},
 		{
 			block: &types.Block{
-				Header: &types.Header{Height: 11, DataHash: deadBeefHash},
-				Data:   &types.Data{Txs: deadBeefTxs},
+				Header: types.Header{Height: 11, DataHash: deadBeefHash},
+				Data:   types.Data{Txs: deadBeefTxs},
 			},
 			signedHeader: types.SignedHeader{
 				Header: &types.Header{Height: 11},
@@ -115,21 +112,18 @@ func TestValidateBlockMeta(t *testing.T) {
 			meta: nil, wantErr: "non-nil BlockMeta",
 		},
 		{
-			meta: &types.BlockMeta{}, wantErr: "non-nil Header",
-		},
-		{
-			meta: &types.BlockMeta{Header: new(types.Header)}, wantErr: "unexpected empty SignedHeader",
+			meta: &types.BlockMeta{}, wantErr: "unexpected empty SignedHeader",
 		},
 
 		// Start Header.Height mismatch test
 		{
-			meta:         &types.BlockMeta{Header: &types.Header{Height: 10}},
+			meta:         &types.BlockMeta{Header: types.Header{Height: 10}},
 			signedHeader: types.SignedHeader{Header: &types.Header{Height: 11}},
 			wantErr:      "Header heights mismatched",
 		},
 
 		{
-			meta:         &types.BlockMeta{Header: &types.Header{Height: 11}},
+			meta:         &types.BlockMeta{Header: types.Header{Height: 11}},
 			signedHeader: types.SignedHeader{Header: &types.Header{Height: 11}},
 		},
 		// End Header.Height mismatch test
@@ -143,12 +137,12 @@ func TestValidateBlockMeta(t *testing.T) {
 
 		{
 			meta:         &types.BlockMeta{Header: hdrHeight11},
-			signedHeader: types.SignedHeader{Header: hdrHeight11},
+			signedHeader: types.SignedHeader{Header: &hdrHeight11},
 		},
 
 		{
 			meta: &types.BlockMeta{
-				Header: &types.Header{
+				Header: types.Header{
 					Height:         11,
 					ValidatorsHash: []byte("lite-test"),
 					// TODO: should be able to use empty time after Amino upgrade
@@ -163,7 +157,7 @@ func TestValidateBlockMeta(t *testing.T) {
 
 		{
 			meta: &types.BlockMeta{
-				Header: &types.Header{
+				Header: types.Header{
 					Height: 11, DataHash: deadBeefHash,
 					ValidatorsHash: []byte("Tendermint"),
 					Time:           testTime1,
@@ -182,7 +176,7 @@ func TestValidateBlockMeta(t *testing.T) {
 
 		{
 			meta: &types.BlockMeta{
-				Header: &types.Header{
+				Header: types.Header{
 					Height: 11, DataHash: deadBeefHash,
 					ValidatorsHash: []byte("Tendermint"),
 					Time:           testTime2,

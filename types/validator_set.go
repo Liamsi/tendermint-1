@@ -7,8 +7,8 @@ import (
 	"sort"
 	"strings"
 
-	cmn "github.com/tendermint/tmlibs/common"
-	"github.com/tendermint/tmlibs/merkle"
+	"github.com/tendermint/tendermint/crypto/merkle"
+	cmn "github.com/tendermint/tendermint/libs/common"
 )
 
 // ValidatorSet represent a set of *Validator at a given height.
@@ -41,7 +41,7 @@ func NewValidatorSet(valz []*Validator) *ValidatorSet {
 	vals := &ValidatorSet{
 		Validators: validators,
 	}
-	if valz != nil {
+	if len(valz) > 0 {
 		vals.IncrementAccum(1)
 	}
 
@@ -55,7 +55,8 @@ func (vals *ValidatorSet) CopyIncrementAccum(times int) *ValidatorSet {
 	return copy
 }
 
-// Increment Accum and update the proposer.
+// IncrementAccum increments accum of each validator and updates the
+// proposer. Panics if validator set is empty.
 func (vals *ValidatorSet) IncrementAccum(times int) {
 
 	// Add VotingPower * times to each validator and order into heap.
