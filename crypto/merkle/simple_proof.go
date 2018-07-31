@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"fmt"
 
-	cmn "github.com/tendermint/tmlibs/common"
+	cmn "github.com/tendermint/tendermint/libs/common"
 )
 
 // SimpleProof represents a simple Merkle proof.

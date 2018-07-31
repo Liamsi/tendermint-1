@@ -29,7 +29,7 @@
 # Packages without releases must pin to a commit.
 
 
-[[constraint]]
+[[override]]
   name = "github.com/go-kit/kit"
   version = "=0.7.0"
 
@@ -63,7 +63,6 @@
 
 [[constraint]]
   name = "github.com/tendermint/go-amino"
-  version = "=v0.11.1"
   version = "~0.10.1"
 
 [[constraint]]

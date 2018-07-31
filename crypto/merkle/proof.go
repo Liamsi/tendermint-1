@@ -3,7 +3,7 @@ package merkle
 import (
 	"bytes"
 
-	cmn "github.com/tendermint/tmlibs/common"
+	cmn "github.com/tendermint/tendermint/libs/common"
 )
 
 //----------------------------------------
@@ -86,7 +86,7 @@ func (prt *ProofRuntime) Decode(pop ProofOp) (ProofOperator, error) {
 func (prt *ProofRuntime) DecodeProof(proof *Proof) (poz ProofOperators, err error) {
 	poz = ProofOperators(nil)
 	for _, pop := range proof.Ops {
-		operator, err := prt.Decode(*pop)
+		operator, err := prt.Decode(pop)
 		if err != nil {
 			return nil, cmn.ErrorWrap(err, "decoding a proof operator")
 		}
