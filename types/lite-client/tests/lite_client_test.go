@@ -35,7 +35,6 @@ func TestCase(t *testing.T) {
 			t.Run("verify", TestVerify)
 		default:
 			fmt.Println("No such test found: ", testCase.Test)
-
 		}
 	}
 
@@ -45,14 +44,36 @@ func TestVerify(t *testing.T) {
 
 	for i, input := range testCase.Input {
 		if i == 0 {
-			e := lite.Verify(testCase.Initial.SignedHeader.Header.ChainID, testCase.Initial.SignedHeader, &testCase.Initial.NextValidatorSet, input.SignedHeader, &input.ValidatorSet, testCase.Initial.TrustingPeriod, testCase.Initial.Now, lite.DefaultTrustLevel)
+
+			fmt.Println(testCase.Initial.SignedHeader)
+			fmt.Printf("%X\n", testCase.Initial.SignedHeader.Hash())
+			fmt.Printf("%X\n", testCase.Initial.SignedHeader.Commit.BlockID.Hash)
+			fmt.Printf("%X\n", input.SignedHeader.Commit.BlockID.Hash)
+
+			e := lite.Verify(
+				testCase.Initial.SignedHeader.Header.ChainID,
+				testCase.Initial.SignedHeader,
+				&testCase.Initial.NextValidatorSet,
+				input.SignedHeader,
+				&input.ValidatorSet,
+				testCase.Initial.TrustingPeriod,
+				testCase.Initial.Now,
+				lite.DefaultTrustLevel)
 			if e != nil {
 				if e.Error() != testCase.ExpectedOutput[0] {
 					t.Errorf("\n Failing test: %s \n Error: %v \n Expected error: %v", testCase.Description, e, testCase.ExpectedOutput[0])
 				}
 			}
 		} else {
-			e := lite.Verify(testCase.Input[i-1].SignedHeader.Header.ChainID, testCase.Input[i-1].SignedHeader, &testCase.Input[i-1].NextValidatorSet, input.SignedHeader, &input.ValidatorSet, testCase.Initial.TrustingPeriod, testCase.Initial.Now, lite.DefaultTrustLevel)
+			e := lite.Verify(
+				testCase.Input[i-1].SignedHeader.Header.ChainID,
+				testCase.Input[i-1].SignedHeader,
+				&testCase.Input[i-1].NextValidatorSet,
+				input.SignedHeader,
+				&input.ValidatorSet,
+				testCase.Initial.TrustingPeriod,
+				testCase.Initial.Now,
+				lite.DefaultTrustLevel)
 			if e != nil {
 				if e.Error() != testCase.ExpectedOutput[i] {
 					t.Errorf("\n Failing test: %s \n Error: %v \n Expected error: %v", testCase.Description, e, testCase.ExpectedOutput[i])

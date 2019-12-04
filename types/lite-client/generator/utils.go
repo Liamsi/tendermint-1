@@ -1,6 +1,7 @@
 package generator
 
 import (
+	"crypto/sha256"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -58,7 +59,7 @@ func NewState() *st.State {
 		Evidence:  types.DefaultEvidenceParams(),
 		Validator: types.DefaultValidatorParams(),
 	}
-
+	appHash := sha256.Sum256([]byte("app_hash"))
 	return &st.State{
 		ChainID:         "test-chain-01",
 		LastBlockHeight: 0,
@@ -73,7 +74,7 @@ func NewState() *st.State {
 		ConsensusParams:                  consensusParams,
 		LastHeightConsensusParamsChanged: 1,
 
-		AppHash: []byte("app_hash"),
+		AppHash: appHash[:],
 	}
 }
 
